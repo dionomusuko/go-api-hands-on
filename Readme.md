@@ -11,3 +11,10 @@ PUT /tasks 　タスク内容変更
 DELETE /tasks/:id 　タスク削除
 ```
 
+| Field | type | description |
+| :--- | :--- | :--- | 
+| id | int | auto incrementすること |
+| title | varchar(256) | タスクのタイトル |
+| description | varchar(256) | タスクの説明 |
+| created_at | datetime ||
+| updated_at | datetime ||

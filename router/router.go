@@ -13,7 +13,7 @@ func Router() *echo.Echo {
 	e.Use(middleware.Recover())
 
 	v1 := e.Group("/api/v1")
-	task := v1.Group("tasks")
+	task := v1.Group("/tasks")
 	task.GET("", controller.ListTasks)
 	task.GET("/:id", controller.FindById)
 	task.POST("/", controller.Create)

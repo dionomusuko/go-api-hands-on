@@ -5,3 +5,5 @@ type Task struct {
 	title       string
 	discription string
 }
+
+type Tasks []Task

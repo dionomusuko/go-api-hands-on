@@ -29,3 +29,13 @@ func List() (*model.Tasks, error) {
 	}
 	return &tasks, nil
 }
+
+func FindById(id int) (*model.Task, error) {
+	row := Conn.QueryRow("SELECT Id, Title, Description FROM Tasks WHERE Id = ?", id)
+	var task model.Task
+	if err := row.Scan(&task.Id, &task.Title, &task.Description); err != nil {
+		log.Printf("sql error: %v", err)
+		return nil, err
+	}
+	return &task, nil
+}

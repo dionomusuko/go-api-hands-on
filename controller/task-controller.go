@@ -3,6 +3,7 @@ package controller
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 
@@ -14,12 +15,18 @@ func ListTasks(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "status internal")
 	}
-	log.Println(tasks)
 	return c.JSON(http.StatusOK, tasks)
 }
 
 func FindById(c echo.Context) error {
-	return nil
+	paramId := c.Param("id")
+	id, _ := strconv.Atoi(paramId)
+	log.Println(id)
+	task, err := database.FindById(id)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+	return c.JSON(http.StatusOK, task)
 }
 
 func Create(c echo.Context) error {

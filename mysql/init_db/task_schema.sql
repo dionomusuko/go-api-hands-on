@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS Tasks(
     `Updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
 )ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO Tasks(Title, Discription) VALUE('sample', 'hello world')
+INSERT INTO Tasks(Title, Description) VALUE('sample', 'hello world');

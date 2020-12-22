@@ -1,9 +1,9 @@
 package model
 
 type Task struct {
-	id          int
-	title       string
-	description string
+	Id          int    `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
 type Tasks []Task

@@ -1,17 +1,21 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+
+	"github.com/dionomusuko/go-api-hands-on/database"
 )
 
-func Hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
-}
-
 func ListTasks(c echo.Context) error {
-	return c.String(http.StatusOK, "ok")
+	tasks, err := database.List()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, "status internal")
+	}
+	log.Println(tasks)
+	return c.JSON(http.StatusOK, tasks)
 }
 
 func FindById(c echo.Context) error {

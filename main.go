@@ -1,6 +1,8 @@
 package main
 
-import "github.com/dionomusuko/go-api-hands-on/router"
+import (
+	"github.com/dionomusuko/go-api-hands-on/router"
+)
 
 func main() {
 	e := router.Router()

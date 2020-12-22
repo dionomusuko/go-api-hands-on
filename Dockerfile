@@ -1,26 +1,21 @@
-FROM golang:1.14-alpine AS builder
+# Builder container
+FROM golang:1.14.2 AS builder
 
-# go modulesの設定
+ENV GOOS=linux
+ENV GOARCH=amd64
+ENV CGO_ENABLED=0
 ENV GO111MODULE on
 
-# /goがWORKDIRになっているので変更
-WORKDIR /go/src/app
+WORKDIR /go/src/github.com/yamalabo
 
-# docker-hands-onのfileをWORKDIRに追加
 COPY . .
+RUN go mod download && \
+    go get github.com/markbates/refresh
 
-# modulesのダウンロード
-RUN go mod download
 
-RUN go get github.com/markbates/refresh
-
-# ビルド
 RUN go build -o main
 
-# マルチステージビルド
-FROM alpine:3.11.6
+EXPOSE 8084
 
-COPY --from=builder /go/src/app/main .
-
-# ./mainを実行
 CMD ["./main"]
+

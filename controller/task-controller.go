@@ -1,13 +1,13 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
 
 	"github.com/dionomusuko/go-api-hands-on/database"
+	"github.com/dionomusuko/go-api-hands-on/model"
 )
 
 func ListTasks(c echo.Context) error {
@@ -21,7 +21,6 @@ func ListTasks(c echo.Context) error {
 func FindById(c echo.Context) error {
 	paramId := c.Param("id")
 	id, _ := strconv.Atoi(paramId)
-	log.Println(id)
 	task, err := database.FindById(id)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "bad request")
@@ -30,13 +29,42 @@ func FindById(c echo.Context) error {
 }
 
 func Create(c echo.Context) error {
-	return nil
+	title := c.QueryParam("title")
+	description := c.QueryParam("description")
+	t := model.Task{
+		Title:       title,
+		Description: description,
+	}
+	err := database.Store(t)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+	return c.String(http.StatusCreated, "task created")
 }
 
 func Delete(c echo.Context) error {
-	return nil
+	paramId := c.Param("id")
+	id, _ := strconv.Atoi(paramId)
+	err := database.Delete(id)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+	return c.String(http.StatusOK, "task deleted")
 }
 
 func Update(c echo.Context) error {
-	return nil
+	paramId := c.Param("id")
+	id, _ := strconv.Atoi(paramId)
+	title := c.QueryParam("title")
+	description := c.QueryParam("description")
+	t := model.Task{
+		Id:          id,
+		Title:       title,
+		Description: description,
+	}
+	err := database.Update(t)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+	return c.String(http.StatusOK, "task updated")
 }

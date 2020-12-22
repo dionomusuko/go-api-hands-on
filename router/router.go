@@ -16,7 +16,7 @@ func Router() *echo.Echo {
 	task := v1.Group("/tasks")
 	task.GET("", controller.ListTasks)
 	task.GET("/:id", controller.FindById)
-	task.POST("/", controller.Create)
+	task.POST("", controller.Create)
 	task.PUT("/:id", controller.Update)
 	task.DELETE("/:id", controller.Delete)
 	return e

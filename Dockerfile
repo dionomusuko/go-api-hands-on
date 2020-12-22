@@ -6,16 +6,10 @@ ENV GOARCH=amd64
 ENV CGO_ENABLED=0
 ENV GO111MODULE on
 
-WORKDIR /go/src/github.com/yamalabo
+WORKDIR /app
 
 COPY . .
 RUN go mod download && \
-    go get github.com/markbates/refresh
+    go get -u github.com/cosmtrek/air
 
-
-RUN go build -o main
-
-EXPOSE 8084
-
-CMD ["./main"]
-
+CMD ["air"]

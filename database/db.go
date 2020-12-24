@@ -18,6 +18,5 @@ func init() {
 		log.Printf("connected error: %v", dbURI)
 		os.Exit(1)
 	}
-	defer db.Close()
 	DB = db
 }

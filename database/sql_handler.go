@@ -8,7 +8,7 @@ import (
 
 func List() (*model.Tasks, error) {
 	var tasks model.Tasks
-	rows, err := Conn.Query("SELECT Id, Title, Description FROM Tasks")
+	rows, err := DB.Query("SELECT Id, Title, Description FROM Tasks")
 	if err != nil {
 		log.Printf("sql error: %v", err)
 		return nil, err
@@ -30,7 +30,7 @@ func List() (*model.Tasks, error) {
 }
 
 func FindById(id int) (*model.Task, error) {
-	row := Conn.QueryRow("SELECT Id, Title, Description FROM Tasks WHERE Id = ?", id)
+	row := DB.QueryRow("SELECT Id, Title, Description FROM Tasks WHERE Id = ?", id)
 	var task model.Task
 	if err := row.Scan(&task.Id, &task.Title, &task.Description); err != nil {
 		log.Printf("sql error: %v", err)
@@ -40,7 +40,7 @@ func FindById(id int) (*model.Task, error) {
 }
 
 func Store(task model.Task) error {
-	_, err := Conn.Exec("INSERT INTO Tasks (Title, Description) Values(?,?)", task.Title, task.Description)
+	_, err := DB.Exec("INSERT INTO Tasks (Title, Description) Values(?,?)", task.Title, task.Description)
 	if err != nil {
 		log.Printf("insert error: %v", err)
 		return err
@@ -49,7 +49,7 @@ func Store(task model.Task) error {
 }
 
 func Update(task model.Task) error {
-	_, err := Conn.Exec("UPDATE Tasks SET Title = ?, Description = ? WHERE id = ?", task.Title, task.Description, task.Id)
+	_, err := DB.Exec("UPDATE Tasks SET Title = ?, Description = ? WHERE id = ?", task.Title, task.Description, task.Id)
 	if err != nil {
 		log.Printf("update error: %v", err)
 		return err
@@ -58,7 +58,7 @@ func Update(task model.Task) error {
 }
 
 func Delete(id int) error {
-	_, err := Conn.Exec("DELETE FROM Tasks WHERE id = ?", id)
+	_, err := DB.Exec("DELETE FROM Tasks WHERE id = ?", id)
 	if err != nil {
 		log.Printf("delete error: %v", err)
 		return err

@@ -2,19 +2,22 @@ package database
 
 import (
 	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
-var Conn *sql.DB
+var DB *sql.DB
 
 func init() {
+
 	dbURI := "user:password@tcp(db:3306)/go_db"
-	conn, err := sql.Open("mysql", dbURI)
+	db, err := sql.Open("mysql", dbURI)
 	if err != nil {
 		log.Printf("connected error: %v", dbURI)
 		os.Exit(1)
 	}
-	Conn = conn
+	defer db.Close()
+	DB = db
 }

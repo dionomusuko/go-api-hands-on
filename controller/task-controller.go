@@ -24,7 +24,10 @@ func FindById(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	paramID := c.Param("id")
-	id, _ := strconv.Atoi(paramID)
+	id, err := strconv.Atoi(paramID)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
 
 	task, err := database.FindById(ctx, id)
 	if err != nil {

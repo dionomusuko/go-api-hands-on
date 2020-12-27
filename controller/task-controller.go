@@ -11,7 +11,9 @@ import (
 )
 
 func ListTasks(c echo.Context) error {
-	tasks, err := database.List()
+	ctx := c.Request().Context()
+
+	tasks, err := database.List(ctx)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "status internal")
 	}
@@ -19,9 +21,12 @@ func ListTasks(c echo.Context) error {
 }
 
 func FindById(c echo.Context) error {
-	paramId := c.Param("id")
-	id, _ := strconv.Atoi(paramId)
-	task, err := database.FindById(id)
+	ctx := c.Request().Context()
+
+	paramID := c.Param("id")
+	id, _ := strconv.Atoi(paramID)
+
+	task, err := database.FindById(ctx, id)
 	if err != nil {
 		return c.String(http.StatusBadRequest, "bad request")
 	}
@@ -29,41 +34,55 @@ func FindById(c echo.Context) error {
 }
 
 func Create(c echo.Context) error {
+	ctx := c.Request().Context()
+
 	title := c.QueryParam("title")
 	description := c.QueryParam("description")
 	t := model.Task{
 		Title:       title,
 		Description: description,
 	}
-	err := database.Store(t)
-	if err != nil {
+
+	if err := database.Store(ctx, t); err != nil {
 		return c.String(http.StatusBadRequest, "bad request")
 	}
+
 	return c.String(http.StatusCreated, "task created")
 }
 
 func Delete(c echo.Context) error {
-	paramId := c.Param("id")
-	id, _ := strconv.Atoi(paramId)
-	err := database.Delete(id)
+	ctx := c.Request().Context()
+
+	paramID := c.Param("id")
+	id, err := strconv.Atoi(paramID)
 	if err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+
+	if err := database.Delete(ctx, id); err != nil {
 		return c.String(http.StatusBadRequest, "bad request")
 	}
 	return c.String(http.StatusOK, "task deleted")
 }
 
 func Update(c echo.Context) error {
-	paramId := c.Param("id")
-	id, _ := strconv.Atoi(paramId)
+	ctx := c.Request().Context()
+
+	paramID := c.Param("id")
 	title := c.QueryParam("title")
 	description := c.QueryParam("description")
+	id, err := strconv.Atoi(paramID)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "bad request")
+	}
+
 	t := model.Task{
 		Id:          id,
 		Title:       title,
 		Description: description,
 	}
-	err := database.Update(t)
-	if err != nil {
+
+	if err := database.Update(ctx, t); err != nil {
 		return c.String(http.StatusBadRequest, "bad request")
 	}
 	return c.String(http.StatusOK, "task updated")

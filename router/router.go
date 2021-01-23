@@ -1,10 +1,9 @@
 package router
 
 import (
+	"github.com/dionomusuko/go-api-hands-on/controller"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-
-	"github.com/dionomusuko/go-api-hands-on/controller"
 )
 
 func Router() *echo.Echo {

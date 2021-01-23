@@ -39,18 +39,15 @@ func FindById(c echo.Context) error {
 func Create(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	title := c.QueryParam("title")
-	description := c.QueryParam("description")
-	t := model.Task{
-		Title:       title,
-		Description: description,
+	task := new(model.Task)
+	if err := c.Bind(task); err != nil {
+		c.Logger().Error(err)
 	}
-
-	if err := database.Store(ctx, t); err != nil {
+	if err := database.Store(ctx, task); err != nil {
 		return c.String(http.StatusBadRequest, "bad request")
 	}
 
-	return c.String(http.StatusCreated, "task created")
+	return c.JSON(http.StatusCreated, task)
 }
 
 func Delete(c echo.Context) error {
@@ -71,22 +68,13 @@ func Delete(c echo.Context) error {
 func Update(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	paramID := c.Param("id")
-	title := c.QueryParam("title")
-	description := c.QueryParam("description")
-	id, err := strconv.Atoi(paramID)
-	if err != nil {
-		return c.String(http.StatusBadRequest, "bad request")
+	task := new(model.Task)
+	if err := c.Bind(task); err != nil {
+		c.Logger().Error(err)
 	}
 
-	t := model.Task{
-		Id:          id,
-		Title:       title,
-		Description: description,
-	}
-
-	if err := database.Update(ctx, t); err != nil {
+	if err := database.Update(ctx, task); err != nil {
 		return c.String(http.StatusBadRequest, "bad request")
 	}
-	return c.String(http.StatusOK, "task updated")
+	return c.JSON(http.StatusOK, task)
 }

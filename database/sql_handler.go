@@ -9,6 +9,8 @@ import (
 
 func List(ctx context.Context) (*model.Tasks, error) {
 	var tasks model.Tasks
+	var task model.Task
+
 	rows, err := DB.QueryContext(ctx, "SELECT Id, Title, Description FROM Tasks")
 	if err != nil {
 		log.Printf("sql error: %v", err)
@@ -16,16 +18,10 @@ func List(ctx context.Context) (*model.Tasks, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var task model.Task
 		if err := rows.Scan(&task.Id, &task.Title, &task.Description); err != nil {
-			continue
+			log.Printf("%v", err)
 		}
-		param := model.Task{
-			Id:          task.Id,
-			Title:       task.Title,
-			Description: task.Description,
-		}
-		tasks = append(tasks, param)
+		tasks = append(tasks, task)
 	}
 	return &tasks, nil
 }
@@ -40,7 +36,7 @@ func FindById(ctx context.Context, id int) (*model.Task, error) {
 	return &task, nil
 }
 
-func Store(ctx context.Context, task model.Task) error {
+func Store(ctx context.Context, task *model.Task) error {
 	_, err := DB.ExecContext(ctx, "INSERT INTO Tasks (Title, Description) Values(?,?)", task.Title, task.Description)
 	if err != nil {
 		log.Printf("insert error: %v", err)
@@ -49,7 +45,7 @@ func Store(ctx context.Context, task model.Task) error {
 	return nil
 }
 
-func Update(ctx context.Context, task model.Task) error {
+func Update(ctx context.Context, task *model.Task) error {
 	_, err := DB.ExecContext(ctx, "UPDATE Tasks SET Title = ?, Description = ? WHERE id = ?", task.Title, task.Description, task.Id)
 	if err != nil {
 		log.Printf("update error: %v", err)

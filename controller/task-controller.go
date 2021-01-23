@@ -4,10 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/labstack/echo/v4"
-
 	"github.com/dionomusuko/go-api-hands-on/database"
 	"github.com/dionomusuko/go-api-hands-on/model"
+	"github.com/labstack/echo/v4"
 )
 
 func ListTasks(c echo.Context) error {
